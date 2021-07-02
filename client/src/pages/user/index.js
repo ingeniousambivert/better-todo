@@ -15,7 +15,7 @@ function UserPage() {
 
   const getUserData = (auth) => {
     const { id, accessToken } = auth;
-    return client
+    client
       .get(`/api/users/${id}`, {
         headers: {
           Authorization: `Bearer ${accessToken}`,

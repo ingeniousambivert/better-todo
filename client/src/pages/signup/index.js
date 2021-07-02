@@ -21,6 +21,7 @@ function SignupPage() {
         }
       });
   };
+
   return (
     <Container>
       <div>
