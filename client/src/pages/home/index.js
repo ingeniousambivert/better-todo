@@ -21,11 +21,13 @@ function HomePage() {
   const filterTodos = (e) => {
     const search = e.target.value;
     const filtered = [];
-    todos.forEach((todo) => {
-      if (todo.title.toLowerCase().includes(search.toLowerCase())) {
-        filtered.push(todo);
-      }
-    });
+    if (todos !== null) {
+      todos.forEach((todo) => {
+        if (todo.title.toLowerCase().includes(search.toLowerCase())) {
+          filtered.push(todo);
+        }
+      });
+    }
     // dispatch({ type: "todos", filtered });
   };
 
