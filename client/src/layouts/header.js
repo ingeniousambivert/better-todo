@@ -18,14 +18,14 @@ function Header() {
             <Fragment>
               <li>
                 <Link to="/home">
-                  <button className="hover:text-blue-500 focus:outline-none transition duration-300">
+                  <button className="hover:text-blue-500 text-gray-800 focus:outline-none transition duration-300 font-semibold">
                     Home
                   </button>
                 </Link>
               </li>
               <li>
                 <Link to="/user">
-                  <button className="hover:text-blue-500 transition duration-300 focus:outline-none">
+                  <button className="hover:text-blue-500 text-gray-800 transition duration-300 focus:outline-none font-semibold">
                     User
                   </button>
                 </Link>
@@ -35,7 +35,7 @@ function Header() {
             <Fragment>
               <li>
                 <Link to="/">
-                  <button className="hover:text-blue-500 focus:outline-none transition duration-300">
+                  <button className="hover:text-blue-500 text-gray-800 focus:outline-none transition duration-300 font-semibold">
                     Go Back
                   </button>
                 </Link>
