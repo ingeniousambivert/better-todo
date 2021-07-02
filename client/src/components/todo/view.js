@@ -14,7 +14,19 @@ function ViewTodoList(props) {
   const todosLength = todos?.length;
 
   const renderTodos = (data) => {
-    if (todosLength > 0) {
+    if (todosLength === 0) {
+      return (
+        <div className="flex flex-auto justify-center items-center">
+          <div className="mt-10 w-1/2 ">
+            <p className="text-center text-xl">No Todos Available</p>
+            <p className="text-center mt-2 text-sm text-gray-400 font-light">
+              Create one by clicking
+              <br /> Add Todo button.
+            </p>
+          </div>
+        </div>
+      );
+    } else {
       return data.map((item) => {
         return (
           <Card key={item._id}>
@@ -76,12 +88,6 @@ function ViewTodoList(props) {
           </Card>
         );
       });
-    } else {
-      <div className="flex flex-auto justify-center items-center">
-        <div className="mt-10 w-1/2 ">
-          <p className="text-center">No Todos available</p>
-        </div>
-      </div>;
     }
   };
 
