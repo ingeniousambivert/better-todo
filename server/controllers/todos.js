@@ -1,12 +1,6 @@
 const TodoModel = require("../models/todos");
-const fieldsToExclude = {
-  password: 0,
-  verifyToken: 0,
-  verifyExpires: 0,
-  createdAt: 0,
-  updatedAt: 0,
-  __v: 0,
-};
+const mongoose = require("mongoose");
+const { decodeUserID } = require("../auth");
 
 async function createTodo(req, res) {
   const data = req.body;
@@ -23,14 +17,17 @@ async function createTodo(req, res) {
 async function getTodo(req, res) {
   const { id } = req.params;
   try {
-    const Todo = await TodoModel.findById(id).populate(
-      "author",
-      fieldsToExclude
-    );
-    if (Todo) {
-      return res.status(200).json(Todo);
+    const Todo = await TodoModel.findById(id);
+    const { author } = Todo;
+    const decodedID = decodeUserID(req.headers.authorization.split(" ")[1]);
+    if (decodedID == author) {
+      if (Todo) {
+        return res.status(200).json(Todo);
+      } else {
+        return res.status(404).json({ error: "Todo not found" });
+      }
     } else {
-      return res.status(404).json({ error: "Todo not found" });
+      return res.status(403).json({ error: "Access denied" });
     }
   } catch (error) {
     console.log(error);
@@ -40,9 +37,12 @@ async function getTodo(req, res) {
 
 async function getAllTodos(req, res) {
   try {
-    const Todos = await TodoModel.find()
-      .populate("author", fieldsToExclude)
-      .sort({ createdAt: -1 });
+    const decodedID = decodeUserID(req.headers.authorization.split(" ")[1]);
+    const userID = mongoose.Types.ObjectId(decodedID);
+    const Todos = await TodoModel.aggregate([
+      { $match: { author: { $eq: userID } } },
+      { $sort: { createdAt: -1 } },
+    ]);
     if (Todos) {
       return res.status(200).json(Todos);
     } else {
