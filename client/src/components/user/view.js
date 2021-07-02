@@ -6,7 +6,7 @@ function UserView(props) {
     <div>
       {user ? (
         <div className="flex flex-col justify-center items-center mt-20">
-          <div className="w-1/2 lg:w-1/4">
+          <div className="w-1/2 lg:w-2/4">
             <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-5">
               <div className="px-4 py-5 sm:px-6">
                 <h3 className="text-lg leading-6 font-medium text-gray-900">

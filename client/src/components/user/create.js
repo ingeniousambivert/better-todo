@@ -82,7 +82,11 @@ function CreateUser(props) {
                     className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                     placeholder="Enter First Name"
                   />
-                  {errors.firstname && <small>This field is required</small>}
+                  {errors.firstname && (
+                    <small className="text-red-400 font-light">
+                      This field is required
+                    </small>
+                  )}
                 </div>
                 <div>
                   <input
@@ -93,7 +97,11 @@ function CreateUser(props) {
                     className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                     placeholder="Enter Last Name"
                   />
-                  {errors.lastname && <small>This field is required</small>}
+                  {errors.lastname && (
+                    <small className="text-red-400 font-light">
+                      This field is required
+                    </small>
+                  )}
                 </div>
               </div>
               <div>
@@ -105,7 +113,11 @@ function CreateUser(props) {
                   className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Enter Email"
                 />
-                {errors.email && <small>This field is required</small>}
+                {errors.email && (
+                  <small className="text-red-400 font-light">
+                    This field is required
+                  </small>
+                )}
               </div>
               <div>
                 <input
@@ -116,7 +128,11 @@ function CreateUser(props) {
                   className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Enter Password"
                 />
-                {errors.password && <small>This field is required</small>}
+                {errors.password && (
+                  <small className="text-red-400 font-light">
+                    This field is required
+                  </small>
+                )}
               </div>
 
               <div>
