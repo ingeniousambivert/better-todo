@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import Container from "../../layouts";
 import client from "../../utils/client";
 import useStoreContext from "../../store";
@@ -10,7 +10,7 @@ function HomePage() {
   const [showUpdate, setShowUpdate] = useState(false);
   const [currentTodo, setCurrentTodo] = useState(null);
 
-  const [error, setErorr] = useState(null);
+  const [error, setErorr] = useState(false);
   const { state, dispatch } = useStoreContext();
 
   const todos = state.todos;
@@ -32,7 +32,7 @@ function HomePage() {
       })
       .catch((error) => {
         console.log(error);
-        setErorr("error");
+        setErorr(true);
       });
   };
 
@@ -54,7 +54,7 @@ function HomePage() {
       })
       .catch((error) => {
         console.log(error);
-        setErorr("error");
+        setErorr(true);
       });
   };
 
@@ -72,7 +72,7 @@ function HomePage() {
       })
       .catch((error) => {
         console.log(error);
-        setErorr("error");
+        setErorr(true);
       });
   };
 
@@ -90,7 +90,7 @@ function HomePage() {
       })
       .catch((error) => {
         console.log(error);
-        setErorr("error");
+        setErorr(true);
       });
   };
 
@@ -123,27 +123,45 @@ function HomePage() {
             </button>
           </div>
         </div>
-        <div>
-          {showCreate || showUpdate ? (
-            <WriteTodo
-              todo={currentTodo}
-              setShowCreate={setShowCreate}
-              showCreate={showCreate}
-              createTodo={createTodo}
-              setShowUpdate={setShowUpdate}
-              showUpdate={showUpdate}
-              updateTodo={updateTodo}
-            />
+        <Fragment>
+          {error ? (
+            <div
+              className="bg-red-100 border-t-4 border-red-500 rounded text-red-900 px-4 py-3 shadow-md"
+              role="alert"
+            >
+              <div className="flex text-center">
+                <div>
+                  <p className="text-sm">
+                    There was an error while fetching your todos.
+                    <br /> Please try again later.
+                  </p>
+                </div>
+              </div>
+            </div>
           ) : (
-            <ViewTodoList
-              todos={todos}
-              setCurrentTodo={setCurrentTodo}
-              setShowUpdate={setShowUpdate}
-              updateTodo={updateTodo}
-              deleteTodo={deleteTodo}
-            />
+            <div>
+              {showCreate || showUpdate ? (
+                <WriteTodo
+                  todo={currentTodo}
+                  setShowCreate={setShowCreate}
+                  showCreate={showCreate}
+                  createTodo={createTodo}
+                  setShowUpdate={setShowUpdate}
+                  showUpdate={showUpdate}
+                  updateTodo={updateTodo}
+                />
+              ) : (
+                <ViewTodoList
+                  todos={todos}
+                  setCurrentTodo={setCurrentTodo}
+                  setShowUpdate={setShowUpdate}
+                  updateTodo={updateTodo}
+                  deleteTodo={deleteTodo}
+                />
+              )}
+            </div>
           )}
-        </div>
+        </Fragment>
       </div>
     </Container>
   );
