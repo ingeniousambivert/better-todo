@@ -10,7 +10,7 @@ async function createTodo(req, res) {
     res.status(201).json(newTodo);
   } catch (error) {
     console.log(error);
-    res.status(400).send("serverError");
+    res.status(500).send("serverError");
   }
 }
 
@@ -20,7 +20,7 @@ async function getTodo(req, res) {
     const Todo = await TodoModel.findById(id);
     const { author } = Todo;
     const decodedID = decodeUserID(req.headers.authorization.split(" ")[1]);
-    if (decodedID == author) {
+    if (decodedID === String(author)) {
       if (Todo) {
         return res.status(200).json(Todo);
       } else {
@@ -31,7 +31,7 @@ async function getTodo(req, res) {
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send("serverError");
+    res.status(500).send("serverError");
   }
 }
 
@@ -50,7 +50,7 @@ async function getAllTodos(req, res) {
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send("serverError");
+    res.status(500).send("serverError");
   }
 }
 
@@ -58,17 +58,23 @@ async function updateTodo(req, res) {
   const { id } = req.params;
   try {
     const Todo = await TodoModel.findById(id);
-    if (Todo) {
-      const updatedTodo = await TodoModel.findByIdAndUpdate(id, req.body, {
-        new: true,
-      });
-      return res.status(200).json(updatedTodo);
+    const { author } = Todo;
+    const decodedID = decodeUserID(req.headers.authorization.split(" ")[1]);
+    if (decodedID === String(author)) {
+      if (Todo) {
+        const updatedTodo = await TodoModel.findByIdAndUpdate(id, req.body, {
+          new: true,
+        });
+        return res.status(200).json(updatedTodo);
+      } else {
+        return res.status(404).json({ error: "Todo not found" });
+      }
     } else {
-      return res.status(404).json({ error: "Todo not found" });
+      return res.status(403).json({ error: "Access denied" });
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send("serverError");
+    res.status(500).send("serverError");
   }
 }
 
@@ -76,15 +82,21 @@ async function deleteTodo(req, res) {
   const { id } = req.params;
   try {
     const Todo = await TodoModel.findById(id);
-    if (Todo) {
-      await TodoModel.findByIdAndDelete(id);
-      return res.status(200).json("Todo Deleted");
+    const { author } = Todo;
+    const decodedID = decodeUserID(req.headers.authorization.split(" ")[1]);
+    if (decodedID === String(author)) {
+      if (Todo) {
+        await TodoModel.findByIdAndDelete(id);
+        return res.status(200).json("Todo Deleted");
+      } else {
+        return res.status(404).json({ error: "Todo not found" });
+      }
     } else {
-      return res.status(400).json({ error: "Todo not found" });
+      return res.status(403).json({ error: "Access denied" });
     }
   } catch (error) {
     console.log(error);
-    res.status(400).send("serverError");
+    res.status(500).send("serverError");
   }
 }
 
