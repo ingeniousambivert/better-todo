@@ -1,7 +1,8 @@
 import React from "react";
+import produce from "immer";
 import { get } from "lodash";
 import storage from "../utils/storage";
-import produce from "immer";
+import { sanitizeString } from "../utils/";
 
 const initialState = {
   user: storage.get("user") || null,
@@ -12,14 +13,14 @@ const initialState = {
 
 const reducer = (state, action) => {
   const handlers = {
-    authenticate: (state, { auth }) => {
+    authenticateUser: (state, { auth }) => {
       state.isAuthenticated = true;
       storage.set("isAuthenticated", true);
       state.auth = auth;
       storage.set("auth", auth);
     },
 
-    revoke: (state) => {
+    revokeUser: (state) => {
       state.isAuthenticated = false;
       storage.set("isAuthenticated", false);
       state.todos = null;
@@ -30,14 +31,30 @@ const reducer = (state, action) => {
       storage.set("auth", null);
     },
 
-    user: (state, { user }) => {
+    setUser: (state, { user }) => {
       storage.set("user", user);
       state.user = user;
     },
 
-    todos: (state, { todos }) => {
+    setTodos: (state, { todos }) => {
       storage.set("todos", todos);
       state.todos = todos;
+    },
+
+    filterTodos: (state, { search }) => {
+      const todos = state.todos;
+      const filtered = [];
+      if (search !== "" && todos !== null) {
+        todos.forEach((todo) => {
+          if (sanitizeString(todo.title).includes(sanitizeString(search))) {
+            filtered.push(todo);
+          }
+        });
+        state.todos = filtered;
+      } else {
+        const todos = storage.get("todos");
+        state.todos = todos;
+      }
     },
   };
 
