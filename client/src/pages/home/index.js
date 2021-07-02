@@ -106,18 +106,12 @@ function HomePage() {
           <h1 className="text-2xl md:text-3xl text-gray-800 mb-3 mt-5 font-semibold">
             Your Todos
           </h1>
-          <div className="flex flex-row space-x-4">
-            <button
-              onClick={getTodos}
-              className="text-sm px-6 py-1 mt-4 border border-gray-300 rounded hover:border-gray-500 focus:outline-none  transition duration-300"
-            >
-              Refresh
-            </button>
+          <div>
             <button
               onClick={() => {
                 setShowCreate(true);
               }}
-              className="text-sm px-6 py-1 mt-4 text-white focus:outline-none bg-blue-700 rounded hover:bg-blue-600 transition duration-300"
+              className="block text-sm px-6 py-1 mt-4 text-white focus:outline-none bg-blue-700 rounded hover:bg-blue-600 transition duration-300"
             >
               Add Todo
             </button>
@@ -125,17 +119,15 @@ function HomePage() {
         </div>
         <Fragment>
           {error ? (
-            <div
-              className="bg-red-100 border-t-4 border-red-500 rounded text-red-900 px-4 py-3 shadow-md"
-              role="alert"
-            >
-              <div className="flex text-center">
-                <div>
-                  <p className="text-sm">
-                    There was an error while fetching your todos.
-                    <br /> Please try again later.
-                  </p>
-                </div>
+            <div className="flex flex-auto justify-center items-center">
+              <div
+                className="mt-10 w-1/2 bg-red-100 border-t-4 border-red-500 rounded text-red-900 px-4 py-3 shadow-md"
+                role="alert"
+              >
+                <p className="text-center">
+                  There was an error while fetching your todos.
+                  <br /> Please try again later.
+                </p>
               </div>
             </div>
           ) : (
