@@ -89,6 +89,11 @@ const verifyAccessToken = (id, token) => {
   else return false;
 };
 
+const decodeUserID = (token) => {
+  const decoded = JWT.verify(token, accessSecret);
+  return decoded.sub;
+};
+
 const verifyRefreshToken = (token) => {
   return new Promise((resolve, reject) => {
     JWT.verify(token, refreshSecret, (err, payload) => {
@@ -116,5 +121,6 @@ module.exports = {
   isValidPassword,
   secureRoute,
   verifyAccessToken,
+  decodeUserID,
   verifyRefreshToken,
 };
