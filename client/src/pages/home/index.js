@@ -20,15 +20,7 @@ function HomePage() {
 
   const filterTodos = (e) => {
     const search = e.target.value;
-    const filtered = [];
-    if (todos !== null) {
-      todos.forEach((todo) => {
-        if (todo.title.toLowerCase().includes(search.toLowerCase())) {
-          filtered.push(todo);
-        }
-      });
-    }
-    // dispatch({ type: "todos", filtered });
+    dispatch({ type: "filterTodos", search });
   };
 
   const getTodos = () => {
@@ -42,7 +34,7 @@ function HomePage() {
       .then((response) => {
         if (response.status === 200) {
           const todos = response.data;
-          dispatch({ type: "todos", todos });
+          dispatch({ type: "setTodos", todos });
         }
       })
       .catch((error) => {

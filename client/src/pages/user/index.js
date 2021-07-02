@@ -10,7 +10,7 @@ function UserPage() {
   const user = state.user;
 
   const signOutUser = () => {
-    dispatch({ type: "revoke" });
+    dispatch({ type: "revokeUser" });
   };
 
   const getUserData = (auth) => {
@@ -23,7 +23,7 @@ function UserPage() {
       })
       .then((response) => {
         const user = response.data;
-        dispatch({ type: "user", user });
+        dispatch({ type: "setUser", user });
       })
       .catch((error) => {
         if (error.message.includes("401", "403")) {
