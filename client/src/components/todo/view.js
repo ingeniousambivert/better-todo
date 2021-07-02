@@ -2,9 +2,15 @@ import React, { useEffect } from "react";
 import { Card, CardBody, CardTitle, CardFooter, CardText } from "./card";
 
 function ViewTodoList(props) {
-  const { todos, updateTodo, deleteTodo, setCurrentTodo, setShowUpdate } =
-    props;
-  const todosLength = todos.length;
+  const {
+    todos,
+    loading,
+    updateTodo,
+    deleteTodo,
+    setCurrentTodo,
+    setShowUpdate,
+  } = props;
+  const todosLength = todos?.length;
   const renderTodos = (data) => {
     return data.map((item) => {
       return (
@@ -74,17 +80,25 @@ function ViewTodoList(props) {
   }, [todos]);
   return (
     <div className="mt-10">
-      <div
-        className={
-          todosLength > 2
-            ? "md:grid md:grid-cols-3 md:gap-4 mx-auto space-y-2 md:space-y-0"
-            : todosLength > 1
-            ? "md:grid md:grid-cols-2 md:gap-4 md:max-w-4xl mx-auto space-y-2 md:space-y-0"
-            : "mx-auto max-w-md"
-        }
-      >
-        {renderTodos(todos)}
-      </div>
+      {loading && todos !== null ? (
+        <div className="flex flex-auto justify-center items-center">
+          <div className="mt-10 w-1/2 ">
+            <p className="text-center">Loading...</p>
+          </div>
+        </div>
+      ) : (
+        <div
+          className={
+            todosLength > 2
+              ? "md:grid md:grid-cols-3 md:gap-4 mx-auto space-y-2 md:space-y-0"
+              : todosLength > 1
+              ? "md:grid md:grid-cols-2 md:gap-4 md:max-w-4xl mx-auto space-y-2 md:space-y-0"
+              : "mx-auto max-w-md"
+          }
+        >
+          {todos && renderTodos(todos)}
+        </div>
+      )}
     </div>
   );
 }
