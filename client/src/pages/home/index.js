@@ -103,7 +103,7 @@ function HomePage() {
     <Container>
       <div className="flex flex-col space-y-4 mt-20">
         <div className="flex flex-row justify-between items-center">
-          <h1 className="text-2xl md:text-4xl text-gray-800 mb-3 mt-5 font-semibold">
+          <h1 className="text-2xl md:text-3xl text-gray-800 mb-3 mt-5 font-semibold">
             Your Todos
           </h1>
           <div className="flex flex-row space-x-4">
