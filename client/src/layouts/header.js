@@ -6,7 +6,7 @@ function Header() {
   const { state } = useStoreContext();
   const isUserAuthenticated = state.isAuthenticated;
   return (
-    <div className="mt-4 mx-4">
+    <div className="mt-5 mx-4">
       <nav className="flex flex-row justify-between items-center px-2">
         <div>
           <p className="text-lg font-semibold">
