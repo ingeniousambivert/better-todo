@@ -11,8 +11,6 @@ const {
 const { clientUrl } = require("../config");
 const redisClient = require("../config/redis");
 const {
-  deleteDir,
-  createDir,
   createVerifyMail,
   createForgotPasswordMail,
   createPasswordResetMail,
@@ -21,7 +19,7 @@ const {
 } = require("../utils");
 
 async function createUser(req, res) {
-  const { firstname, lastname, email, password, profile } = req.body;
+  const { firstname, lastname, email, password } = req.body;
 
   try {
     const foundUser = await UserModel.findOne({ email });
@@ -37,12 +35,12 @@ async function createUser(req, res) {
       lastname,
       email,
       password,
-      profile,
       verifyToken: verifyTokenHash,
       verifyExpires,
     });
     await newUser.save(async (error) => {
       if (error) {
+        console.log(error);
         return res.status(500).json({ error: error.message });
       }
       const mailOptions = createVerifyMail(
@@ -51,8 +49,10 @@ async function createUser(req, res) {
         verifyToken,
         clientUrl
       );
-      mailTransporter.sendMail(mailOptions, function (err) {
+      mailTransporter.sendMail(mailOptions, async function (err) {
         if (err) {
+          console.log(err);
+          await UserModel.findByIdAndDelete(newUser._id);
           return res.status(500).json({ error: err.message });
         }
         res.status(201).json({
