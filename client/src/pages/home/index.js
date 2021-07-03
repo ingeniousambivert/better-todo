@@ -117,7 +117,7 @@ function HomePage() {
           <div className="flex flex-row space-x-2">
             <input
               onChange={filterTodos}
-              placeholder="Search A Todo"
+              placeholder="Search Todos"
               className="px-6 py-1 mt-4 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
             />
 
