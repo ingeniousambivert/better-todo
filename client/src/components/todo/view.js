@@ -29,24 +29,25 @@ function ViewTodoList(props) {
     } else {
       return data.map((item) => {
         return (
-          <Card key={item._id}>
+          <Card key={item._id + item.title}>
             <CardBody>
-              <div className="flex flex-row justify-between items-start">
-                <CardTitle
-                  className={item.done && "line-through text-purple-500"}
-                >
-                  {item.title}
-                </CardTitle>
-                <button
-                  onClick={() => {
-                    const done = !item.done;
-                    updateTodo(item._id, { done });
-                  }}
-                  className="text-xs text-purple-700 underline"
-                >
-                  {item.done ? "Mark As Undone" : "Mark As Done"}
-                </button>
-              </div>
+              <CardTitle>
+                <div className="flex flex-row justify-between items-start">
+                  <span className={item.done && "line-through text-purple-500"}>
+                    {item.title}
+                  </span>
+
+                  <button
+                    onClick={() => {
+                      const done = !item.done;
+                      updateTodo(item._id, { done });
+                    }}
+                    className="text-xs font-semibold text-purple-500 underline"
+                  >
+                    {item.done ? "Mark As Undone" : "Mark As Done"}
+                  </button>
+                </div>
+              </CardTitle>
               <div className="mb-2">
                 <p
                   className={
