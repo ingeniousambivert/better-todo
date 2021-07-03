@@ -1,5 +1,6 @@
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
+const logger = require("../utils/logger");
 const UserModel = require("../models/users");
 const {
   generateAccessToken,
@@ -40,7 +41,9 @@ async function createUser(req, res) {
     });
     await newUser.save(async (error) => {
       if (error) {
-        console.log(error);
+        logger.error(
+          `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+        );
         return res.status(500).json({ error: error.message });
       }
       const mailOptions = createVerifyMail(
@@ -49,11 +52,13 @@ async function createUser(req, res) {
         verifyToken,
         clientUrl
       );
-      mailTransporter.sendMail(mailOptions, async function (err) {
-        if (err) {
-          console.log(err);
+      mailTransporter.sendMail(mailOptions, async function (error) {
+        if (error) {
           await UserModel.findByIdAndDelete(newUser._id);
-          return res.status(500).json({ error: err.message });
+          logger.error(
+            `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+          );
+          return res.status(500).json({ error: error.message });
         }
         res.status(201).json({
           message: `Created User with ID: ${newUser._id} and sent verification email to ${newUser.email}`,
@@ -61,8 +66,10 @@ async function createUser(req, res) {
       });
     });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    logger.error(
+      `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -84,8 +91,10 @@ async function authenticateUser(req, res) {
       return res.status(401).json({ error: "Email is invalid" });
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    logger.error(
+      `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -103,7 +112,10 @@ async function refreshUserAccess(req, res) {
         .json({ accessToken, refreshToken: newRefreshToken, id });
     }
   } catch (error) {
-    res.status(500).json({ error: "Internal Server Error" });
+    logger.error(
+      `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -114,17 +126,21 @@ async function revokeUserAccess(req, res) {
     if (!isTokenValid) {
       return res.status(403).json({ error: "Access denied" });
     } else {
-      redisClient.DEL(id, (err, val) => {
-        if (err) {
-          console.log(err);
-          return res.status(500).json({ error: "Internal Server Error" });
+      redisClient.DEL(id, (error, val) => {
+        if (error) {
+          logger.error(
+            `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+          );
+          return res.status(500).json({ error: error.message });
         }
         return res.sendStatus(204);
       });
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    logger.error(
+      `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -146,8 +162,10 @@ async function getUser(req, res) {
       }
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    logger.error(
+      `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -186,8 +204,10 @@ async function updateData(req, res) {
       }
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    logger.error(
+      `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -227,9 +247,12 @@ async function updateEmail(req, res) {
               verifyToken,
               clientUrl
             );
-            mailTransporter.sendMail(mailOptions, function (err) {
-              if (err) {
-                return res.status(500).json({ error: err.message });
+            mailTransporter.sendMail(mailOptions, function (error) {
+              if (error) {
+                logger.error(
+                  `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+                );
+                return res.status(500).json({ error: error.message });
               }
               return res.status(200).json({
                 message: `Sent verification email to ${updatedUser.email}`,
@@ -247,8 +270,10 @@ async function updateEmail(req, res) {
       res.status(400).json({ error: "Email and password are required" });
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    logger.error(
+      `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -270,9 +295,12 @@ async function updatePassword(req, res) {
             const passwordHash = await bcrypt.hash(newPassword, 10);
             await UserModel.findByIdAndUpdate(id, { password: passwordHash });
             const mailOptions = createPasswordResetMail(user.email, "update");
-            mailTransporter.sendMail(mailOptions, function (err) {
-              if (err) {
-                return res.status(500).json({ error: err.message });
+            mailTransporter.sendMail(mailOptions, function (error) {
+              if (error) {
+                logger.error(
+                  `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+                );
+                return res.status(500).json({ error: error.message });
               }
             });
             return res
@@ -291,8 +319,10 @@ async function updatePassword(req, res) {
         .json({ error: "Current password and new password are required" });
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    logger.error(
+      `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -321,8 +351,10 @@ async function deleteUser(req, res) {
       res.status(400).json({ error: "User id is required" });
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    logger.error(
+      `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -369,7 +401,9 @@ async function accountManagement(req, res) {
               return res.status(404).json({ error: "User not found" });
             }
           } catch (error) {
-            console.log(error);
+            logger.error(
+              `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+            );
             res.status(500).json({ error: "Internal Server Error" });
           }
           break;
@@ -398,9 +432,12 @@ async function accountManagement(req, res) {
                   verifyToken,
                   clientUrl
                 );
-                mailTransporter.sendMail(mailOptions, function (err) {
-                  if (err) {
-                    return res.status(500).json({ error: err.message });
+                mailTransporter.sendMail(mailOptions, function (error) {
+                  if (error) {
+                    logger.error(
+                      `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+                    );
+                    return res.status(500).json({ error: error.message });
                   }
                   res.status(200).json({
                     message: `Resent verification email to ${user.email}`,
@@ -411,7 +448,9 @@ async function accountManagement(req, res) {
               return res.status(404).json({ error: "User not found" });
             }
           } catch (error) {
-            console.log(error);
+            logger.error(
+              `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+            );
             res.status(500).json({ error: "Internal Server Error" });
           }
           break;
@@ -435,9 +474,12 @@ async function accountManagement(req, res) {
                 resetToken,
                 clientUrl
               );
-              mailTransporter.sendMail(mailOptions, function (err) {
-                if (err) {
-                  return res.status(500).json({ error: err.message });
+              mailTransporter.sendMail(mailOptions, function (error) {
+                if (error) {
+                  logger.error(
+                    `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+                  );
+                  return res.status(500).json({ error: error.message });
                 }
                 res.status(200).json({
                   message: `Sent a reset password link to ${user.email}`,
@@ -447,7 +489,9 @@ async function accountManagement(req, res) {
               return res.status(404).json({ error: "User not found" });
             }
           } catch (error) {
-            console.log(error);
+            logger.error(
+              `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+            );
             res.status(500).json({ error: "Internal Server Error" });
           }
           break;
@@ -476,9 +520,14 @@ async function accountManagement(req, res) {
                       const mailOptions = createPasswordResetMail(user.email);
                       mailTransporter.sendMail(
                         mailOptions,
-                        async function (err) {
-                          if (err) {
-                            return res.status(500).json({ error: err.message });
+                        async function (error) {
+                          if (error) {
+                            logger.error(
+                              `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+                            );
+                            return res
+                              .status(500)
+                              .json({ error: error.message });
                           }
                           return res.status(200).json({
                             message: "Password Reset Successfully",
@@ -499,7 +548,9 @@ async function accountManagement(req, res) {
               res.status(400).json({ error: "Password is required" });
             }
           } catch (error) {
-            console.log(error);
+            logger.error(
+              `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+            );
             res.status(500).json({ error: "Internal Server Error" });
           }
           break;
@@ -512,8 +563,10 @@ async function accountManagement(req, res) {
       res.status(400).json({ error: "Token and/or User id are required" });
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ error: "Internal Server Error" });
+    logger.error(
+      `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+    return res.status(500).json({ error: error.message });
   }
 }
 

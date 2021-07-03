@@ -1,5 +1,6 @@
-const TodoModel = require("../models/todos");
 const mongoose = require("mongoose");
+const logger = require("../utils/logger");
+const TodoModel = require("../models/todos");
 const { decodeUserID } = require("../auth");
 
 async function createTodo(req, res) {
@@ -9,8 +10,10 @@ async function createTodo(req, res) {
     await newTodo.save();
     res.status(201).json(newTodo);
   } catch (error) {
-    console.log(error);
-    res.status(500).send("serverError");
+    logger.error(
+      `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -30,8 +33,10 @@ async function getTodo(req, res) {
       return res.status(403).json({ error: "Access denied" });
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).send("serverError");
+    logger.error(
+      `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -49,8 +54,10 @@ async function getAllTodos(req, res) {
       return res.status(404).json({ error: "Todos not found" });
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).send("serverError");
+    logger.error(
+      `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -73,8 +80,10 @@ async function updateTodo(req, res) {
       return res.status(403).json({ error: "Access denied" });
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).send("serverError");
+    logger.error(
+      `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+    return res.status(500).json({ error: error.message });
   }
 }
 
@@ -95,8 +104,10 @@ async function deleteTodo(req, res) {
       return res.status(403).json({ error: "Access denied" });
     }
   } catch (error) {
-    console.log(error);
-    res.status(500).send("serverError");
+    logger.error(
+      `${error.message} - ${req.originalUrl} - ${req.method} - ${req.ip}`
+    );
+    return res.status(500).json({ error: error.message });
   }
 }
 
