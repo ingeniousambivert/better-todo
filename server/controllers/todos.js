@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 const logger = require("../utils/logger");
+const { setReminder, remindersQueue } = require("../queues/reminder");
 const TodoModel = require("../models/todos");
+const UserModel = require("../models/users");
 const { decodeUserID } = require("../auth");
 
 async function createTodo(req, res) {
@@ -8,6 +10,16 @@ async function createTodo(req, res) {
   try {
     const newTodo = new TodoModel(data);
     await newTodo.save();
+    const { _id, author, reminder } = newTodo;
+    const authorData = await UserModel.findById(author);
+    const { email } = authorData;
+
+    if (reminder !== 0) {
+      const delay = reminder * 60 * 1000;
+      const repeat = reminder * 60 * 1000;
+      await setReminder({ email, id: _id, delay, repeat });
+    }
+
     res.status(201).json(newTodo);
   } catch (error) {
     logger.error(
@@ -21,16 +33,16 @@ async function getTodo(req, res) {
   const { id } = req.params;
   try {
     const Todo = await TodoModel.findById(id);
-    const { author } = Todo;
-    const decodedID = decodeUserID(req.headers.authorization.split(" ")[1]);
-    if (decodedID === String(author)) {
-      if (Todo) {
+    if (Todo) {
+      const { author } = Todo;
+      const decodedID = decodeUserID(req.headers.authorization.split(" ")[1]);
+      if (decodedID === String(author)) {
         return res.status(200).json(Todo);
       } else {
-        return res.status(404).json({ error: "Todo not found" });
+        return res.status(403).json({ error: "Access denied" });
       }
     } else {
-      return res.status(403).json({ error: "Access denied" });
+      return res.status(404).json({ error: "Todo not found" });
     }
   } catch (error) {
     logger.error(
@@ -63,21 +75,28 @@ async function getAllTodos(req, res) {
 
 async function updateTodo(req, res) {
   const { id } = req.params;
+  const { reminder } = req.body;
   try {
     const Todo = await TodoModel.findById(id);
-    const { author } = Todo;
-    const decodedID = decodeUserID(req.headers.authorization.split(" ")[1]);
-    if (decodedID === String(author)) {
-      if (Todo) {
+    if (Todo) {
+      const { author } = Todo;
+      const decodedID = decodeUserID(req.headers.authorization.split(" ")[1]);
+      if (decodedID === String(author)) {
         const updatedTodo = await TodoModel.findByIdAndUpdate(id, req.body, {
           new: true,
         });
+        if (reminder) {
+          await remindersQueue.removeRepeatable("reminder");
+          const delay = reminder * 60 * 1000;
+          const repeat = reminder * 60 * 1000;
+          await setReminder({ email, id: _id, delay, repeat });
+        }
         return res.status(200).json(updatedTodo);
       } else {
-        return res.status(404).json({ error: "Todo not found" });
+        return res.status(403).json({ error: "Access denied" });
       }
     } else {
-      return res.status(403).json({ error: "Access denied" });
+      return res.status(404).json({ error: "Todo not found" });
     }
   } catch (error) {
     logger.error(
@@ -91,17 +110,17 @@ async function deleteTodo(req, res) {
   const { id } = req.params;
   try {
     const Todo = await TodoModel.findById(id);
-    const { author } = Todo;
-    const decodedID = decodeUserID(req.headers.authorization.split(" ")[1]);
-    if (decodedID === String(author)) {
-      if (Todo) {
+    if (Todo) {
+      const { author } = Todo;
+      const decodedID = decodeUserID(req.headers.authorization.split(" ")[1]);
+      if (decodedID === String(author)) {
         await TodoModel.findByIdAndDelete(id);
         return res.status(200).json("Todo Deleted");
       } else {
-        return res.status(404).json({ error: "Todo not found" });
+        return res.status(403).json({ error: "Access denied" });
       }
     } else {
-      return res.status(403).json({ error: "Access denied" });
+      return res.status(404).json({ error: "Todo not found" });
     }
   } catch (error) {
     logger.error(
