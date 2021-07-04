@@ -75,7 +75,6 @@ async function getAllTodos(req, res) {
 
 async function updateTodo(req, res) {
   const { id } = req.params;
-  const { reminder } = req.body;
   try {
     const Todo = await TodoModel.findById(id);
     if (Todo) {
@@ -85,11 +84,16 @@ async function updateTodo(req, res) {
         const updatedTodo = await TodoModel.findByIdAndUpdate(id, req.body, {
           new: true,
         });
+        const { reminder } = updatedTodo;
+        const authorData = await UserModel.findById(author);
+        const { email } = authorData;
         if (reminder) {
           await remindersQueue.removeRepeatable("reminder");
-          const delay = reminder * 60 * 1000;
-          const repeat = reminder * 60 * 1000;
-          await setReminder({ email, id: _id, delay, repeat });
+          if (reminder !== 0) {
+            const delay = reminder * 60 * 1000;
+            const repeat = reminder * 60 * 1000;
+            await setReminder({ email, id, delay, repeat });
+          }
         }
         return res.status(200).json(updatedTodo);
       } else {
