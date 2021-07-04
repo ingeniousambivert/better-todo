@@ -38,7 +38,7 @@ function CreateUser(props) {
                       <p className="text-sm">
                         Please&nbsp;
                         <Link to="/signin" className="underline">
-                          Signin
+                          Sign In
                         </Link>
                         &nbsp;to continue
                       </p>
@@ -142,6 +142,14 @@ function CreateUser(props) {
                 >
                   {loading === true ? "Signing Up..." : "Sign Up"}
                 </button>
+              </div>
+              <div className="pt-5">
+                <p className="text-sm">
+                  Already have an account ?&nbsp;
+                  <Link to="/signin" className="underline hover:text-blue-600">
+                    Sign In
+                  </Link>
+                </p>
               </div>
             </div>
           </form>

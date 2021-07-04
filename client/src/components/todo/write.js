@@ -12,6 +12,7 @@ function CreateTodo(props) {
   } = useForm({ defaultValues: todo });
 
   const onSubmit = (data) => {
+    console.log(data);
     setLoading(true);
     createTodo(data);
     setLoading(false);
@@ -54,6 +55,20 @@ function CreateTodo(props) {
                   className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Enter Content"
                 />
+              </div>
+              <div>
+                <select
+                  {...register("reminder")}
+                  id="reminder"
+                  name="reminder"
+                  className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                >
+                  <option value={0}>No Reminder</option>
+                  <option value={3}>Every 3 hours</option>
+                  <option value={6}>Every 6 hours</option>
+                  <option value={12}>Every 12 hours</option>
+                  <option value={24}>Every 24 hours</option>
+                </select>
               </div>
 
               <div className="flex flex-row space-x-5">
@@ -133,6 +148,20 @@ function UpdateTodo(props) {
                   className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
                   placeholder="Enter Content"
                 />
+              </div>
+              <div>
+                <select
+                  {...register("reminder")}
+                  id="reminder"
+                  name="reminder"
+                  className="relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                >
+                  <option value={0}>No Reminder</option>
+                  <option value={3}>Every 3 hours</option>
+                  <option value={6}>Every 6 hours</option>
+                  <option value={12}>Every 12 hours</option>
+                  <option value={24}>Every 24 hours</option>
+                </select>
               </div>
 
               <div className="flex flex-row space-x-5">

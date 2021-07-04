@@ -1,4 +1,5 @@
 import React, { Fragment, useState } from "react";
+import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 
 function AuthenticateUser(props) {
@@ -91,6 +92,14 @@ function AuthenticateUser(props) {
                 >
                   {loading ? "Siging In..." : "Sign In"}
                 </button>
+              </div>
+              <div className="pt-5">
+                <p className="text-sm">
+                  Don&apos;t have an account ?&nbsp;
+                  <Link to="/signup" className="underline hover:text-blue-600">
+                    Sign Up
+                  </Link>
+                </p>
               </div>
             </div>
           </form>

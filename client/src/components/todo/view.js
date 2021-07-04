@@ -48,7 +48,7 @@ function ViewTodoList(props) {
                   </button>
                 </div>
               </CardTitle>
-              <div className="mb-2">
+              <div className="mb-2 space-y-2">
                 <p
                   className={
                     item.done
@@ -57,6 +57,17 @@ function ViewTodoList(props) {
                   }
                 >
                   {new Date(item.createdAt).toString()}
+                </p>
+                <p
+                  className={
+                    item.done
+                      ? "line-through text-purple-500 text-xs font-light"
+                      : "text-xs font-light text-gray-600"
+                  }
+                >
+                  {item.reminder === 0
+                    ? "No reminders"
+                    : `Reminder every ${item.reminder} hours.`}
                 </p>
               </div>
               <CardText className={item.done && "line-through text-purple-500"}>
