@@ -11,7 +11,7 @@ This project uses [Express](https://expressjs.com/) (a fast, unopinionated, mini
 #### Different Variants : 
 
 
- **Bull** 
+ **Bull** (WIP)
 
  This variant provides job scheduling with [bull](https://optimalbits.github.io/bull/).
  ```bash
@@ -19,7 +19,7 @@ This project uses [Express](https://expressjs.com/) (a fast, unopinionated, mini
     git checkout bull
   ```
 
- **BullMQ**
+ **BullMQ** (WIP)
 
  This variant provides job scheduling with [bullmq](https://docs.bullmq.io/).
  ```bash
@@ -27,7 +27,7 @@ This project uses [Express](https://expressjs.com/) (a fast, unopinionated, mini
     git checkout bull-mq
   ```
 
- **Bree**
+ **Bree** (WIP)
 
 This variant provides job scheduling with [bree](https://jobscheduler.net/#/).
  ```bash
