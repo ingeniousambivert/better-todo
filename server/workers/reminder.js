@@ -1,23 +1,11 @@
-const logger = require("../utils/logger");
-const { clientUrl } = require("../config");
-const { createReminderMail, mailTransporter } = require("../utils");
+const { Worker } = require("bullmq");
+const reminderProccessor = require("../processesors/reminder");
 
-const reminderWorker = async (job, done) => {
-  const { data } = job;
-  const { email, id } = data;
-  const mailOptions = createReminderMail(email, id, clientUrl);
-  mailTransporter.sendMail(mailOptions, async function (error) {
-    if (error) {
-      logger.error(`${error.message}`);
-      throw new Error(error.message);
-    } else {
-      done();
-      return {
-        status: "Success",
-        message: `Sent a Todo reminder for Todo ID: ${id} to user with ${email}`,
-      };
-    }
-  });
-};
+const reminderWorker = new Worker("reminders", reminderProccessor, {
+  connection: {
+    host: "127.0.0.1",
+    port: 6379,
+  },
+});
 
 module.exports = reminderWorker;

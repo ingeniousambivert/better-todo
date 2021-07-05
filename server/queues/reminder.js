@@ -1,16 +1,18 @@
-const Bull = require("bull");
-const reminderWorker = require("../workers/reminder");
+const { Queue, QueueScheduler } = require("bullmq");
 
-const remindersQueue = new Bull("reminders", {
-  redis: { port: 6379, host: "127.0.0.1" },
+const remindersQueueScheduler = new QueueScheduler("reminders");
+const remindersQueue = new Queue("reminders", {
+  concurrency: 1,
+  connection: {
+    host: "127.0.0.1",
+    port: 6379,
+  },
 });
 
-remindersQueue.process("reminder", reminderWorker);
-
-const setReminder = (data) => {
+const setReminder = async (data) => {
   const { email, id, delay, repeat } = data;
 
-  remindersQueue.add(
+  await remindersQueue.add(
     "reminder",
     { email, id },
     {
