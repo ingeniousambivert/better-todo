@@ -88,7 +88,9 @@ async function updateTodo(req, res) {
         const authorData = await UserModel.findById(author);
         const { email } = authorData;
         if (reminder) {
-          await remindersQueue.removeRepeatableByKey("jobKey");
+          const repeatableJobs = await remindersQueue.getRepeatableJobs();
+          console.log(repeatableJobs);
+          // await remindersQueue.removeRepeatableByKey("jobKey");
           if (reminder !== 0) {
             const delay = reminder * 60 * 1000;
             const repeat = reminder * 60 * 1000;
