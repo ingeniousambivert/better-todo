@@ -13,7 +13,7 @@ This project uses [Express](https://expressjs.com/) (a fast, unopinionated, mini
 
  **Bull** 
 
- This variant provides job scheduling with [bulljs](https://optimalbits.github.io/bull/).
+ This variant provides job scheduling with [bull](https://optimalbits.github.io/bull/).
  ```bash
     git clone https://github.com/ingeniousambivert/better-todo.git
     git checkout bull
