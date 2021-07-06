@@ -1,7 +1,7 @@
 const { Worker } = require("bullmq");
-const reminderProccessor = require("../processesors/reminder");
+const reminderProcessor = require("../processor/reminder");
 
-const reminderWorker = new Worker("reminders", reminderProccessor, {
+const reminderWorker = new Worker("reminders", reminderProcessor, {
   connection: {
     host: "127.0.0.1",
     port: 6379,
