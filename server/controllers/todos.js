@@ -15,8 +15,10 @@ async function createTodo(req, res) {
     const { email } = authorData;
 
     if (reminder !== 0) {
-      const delay = reminder * 60 * 1000;
-      const repeat = reminder * 60 * 1000;
+      const ONE_MINUTE = 1000 * 60;
+      const ONE_HOUR = 60 * ONE_MINUTE;
+      const delay = reminder * ONE_HOUR;
+      const repeat = reminder * ONE_HOUR;
       await setReminder({ email, id: _id, delay, repeat });
     }
 
@@ -87,15 +89,13 @@ async function updateTodo(req, res) {
         const { reminder } = updatedTodo;
         const authorData = await UserModel.findById(author);
         const { email } = authorData;
-        if (reminder) {
-          const repeatableJobs = await remindersQueue.getRepeatableJobs();
-          console.log(repeatableJobs);
-          // await remindersQueue.removeRepeatableByKey("jobKey");
-          if (reminder !== 0) {
-            const delay = reminder * 60 * 1000;
-            const repeat = reminder * 60 * 1000;
-            await setReminder({ email, id, delay, repeat });
-          }
+
+        if (reminder !== 0) {
+          const ONE_MINUTE = 1000 * 60;
+          const ONE_HOUR = 60 * ONE_MINUTE;
+          const delay = reminder * ONE_HOUR;
+          const repeat = reminder * ONE_HOUR;
+          await setReminder({ email, id, delay, repeat });
         }
         return res.status(200).json(updatedTodo);
       } else {
