@@ -1,12 +1,17 @@
-const { Queue, QueueScheduler } = require("bullmq");
+const { Queue } = require("bullmq");
 
-const remindersQueueScheduler = new QueueScheduler("reminders");
 const remindersQueue = new Queue("reminders", {
   concurrency: 1,
   connection: {
     host: "127.0.0.1",
     port: 6379,
   },
+  limiter: {
+    max: 1,
+    duration: 1000,
+  },
+  attempts: 5,
+  backoff: { type: "exponential", delay: 3000 },
 });
 
 const setReminder = async (data) => {
