@@ -10,16 +10,14 @@ const remindersQueueScheduler = new QueueScheduler("reminders", {
 });
 
 remindersQueueScheduler.on("failed", (error) => {
-  logger.error(error);
-  console.log("Failed processing reminders job", error);
+  logger.error("Failed processing reminders job", error);
 });
 
 reminderWorker.on("error", (error) => {
-  logger.error(error);
+  logger.error("Worker Error", error);
 });
 
 reminderWorker.on("completed", (job, returnvalue) => {
-  console.log(returnvalue);
   logger.info(`Completed job ${job.id} successfully`);
 });
 
