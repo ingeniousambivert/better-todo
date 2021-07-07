@@ -10,16 +10,7 @@ This project uses [Express](https://expressjs.com/) (a fast, unopinionated, mini
 
 #### Different Variants : 
 
-
- **Bull** (WIP)
-
- This variant provides job scheduling with [bull](https://optimalbits.github.io/bull/).
- ```bash
-    git clone https://github.com/ingeniousambivert/better-todo.git
-    git checkout bull
-  ```
-
- **BullMQ** (WIP)
+ **BullMQ** 
 
  This variant provides job scheduling with [bullmq](https://docs.bullmq.io/).
  ```bash
@@ -27,7 +18,7 @@ This project uses [Express](https://expressjs.com/) (a fast, unopinionated, mini
     git checkout bull-mq
   ```
 
- **Bree** (WIP)
+ **Bree** 
 
 This variant provides job scheduling with [bree](https://jobscheduler.net/#/).
  ```bash
