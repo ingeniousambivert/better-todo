@@ -16,6 +16,10 @@ const TodoSchema = new Schema(
       required: true,
     },
     done: { type: Boolean, default: false },
+    jobId: {
+      type: String,
+      default: null,
+    },
     reminder: { type: Number, default: 0 },
   },
   { timestamps: true }
