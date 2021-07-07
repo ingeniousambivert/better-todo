@@ -12,7 +12,6 @@ function CreateTodo(props) {
   } = useForm({ defaultValues: todo });
 
   const onSubmit = (data) => {
-    console.log(data);
     setLoading(true);
     createTodo(data);
     setLoading(false);

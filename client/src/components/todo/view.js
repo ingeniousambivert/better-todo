@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Card, CardBody, CardTitle, CardFooter, CardText } from "./card";
 
 function ViewTodoList(props) {
@@ -33,9 +34,18 @@ function ViewTodoList(props) {
             <CardBody>
               <CardTitle>
                 <div className="flex flex-row justify-between items-start">
-                  <span className={item.done && "line-through text-purple-500"}>
-                    {item.title}
-                  </span>
+                  <Link
+                    to={{
+                      pathname: `/home/todo/${item._id}`,
+                      state: { id: item._id },
+                    }}
+                  >
+                    <span
+                      className={item.done && "line-through text-purple-500"}
+                    >
+                      {item.title}
+                    </span>
+                  </Link>
 
                   <button
                     onClick={() => {
