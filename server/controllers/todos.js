@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 const logger = require("../utils/logger");
-const { setReminder, remindersQueue } = require("../queues/reminder");
+const {
+  setReminder,
+  remindersQueue,
+  removeRepeatable,
+} = require("../queues/reminder");
 const TodoModel = require("../models/todos");
 const UserModel = require("../models/users");
 const { decodeUserID } = require("../auth");
@@ -77,25 +81,48 @@ async function getAllTodos(req, res) {
 
 async function updateTodo(req, res) {
   const { id } = req.params;
+  const { title, content, reminder, done } = req.body;
   try {
     const Todo = await TodoModel.findById(id);
     if (Todo) {
       const { author } = Todo;
       const decodedID = decodeUserID(req.headers.authorization.split(" ")[1]);
       if (decodedID === String(author)) {
-        const updatedTodo = await TodoModel.findByIdAndUpdate(id, req.body, {
+        let updateData = {};
+
+        if (title !== undefined) {
+          updateData.title = title;
+        }
+        if (content !== undefined) {
+          updateData.content = content;
+        }
+        if (reminder !== undefined) {
+          updateData.reminder = reminder;
+        }
+        if (done !== undefined) {
+          updateData.done = done;
+        }
+
+        const updatedTodo = await TodoModel.findByIdAndUpdate(id, updateData, {
           new: true,
         });
-        const { reminder } = updatedTodo;
+        const { reminder: updatedReminder } = updatedTodo;
         const authorData = await UserModel.findById(author);
         const { email } = authorData;
 
-        if (reminder !== 0) {
+        if (updatedReminder !== 0) {
+          const { jobId } = updatedTodo;
+          await removeRepeatable(jobId);
+
           const ONE_MINUTE = 1000 * 60;
           const ONE_HOUR = 60 * ONE_MINUTE;
-          const delay = reminder * ONE_HOUR;
-          const repeat = reminder * ONE_HOUR;
+          const delay = updatedReminder * ONE_HOUR;
+          const repeat = updatedReminder * ONE_HOUR;
+
           await setReminder({ email, id, delay, repeat });
+        } else {
+          const { jobId } = updatedTodo;
+          await removeRepeatable(jobId);
         }
         return res.status(200).json(updatedTodo);
       } else {
