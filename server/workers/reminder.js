@@ -1,5 +1,5 @@
 const { Worker } = require("bullmq");
-const reminderProcessor = require("../processor/reminder");
+const reminderProcessor = require("../processors/reminder");
 
 const reminderWorker = new Worker("reminders", reminderProcessor, {
   connection: {
