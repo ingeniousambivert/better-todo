@@ -5,6 +5,7 @@ import Landing from "../pages/landing";
 import Signin from "../pages/signin";
 import Signup from "../pages/signup";
 import Home from "../pages/home";
+import Todo from "../pages/home/todo";
 import User from "../pages/user";
 
 import ProtectedRoute from "./protected";
@@ -34,6 +35,12 @@ const Routes = () => {
           exact
           path="/home"
           component={(props) => <Home {...props} />}
+        />
+
+        <ProtectedRoute
+          exact
+          path="/home/todo/:id"
+          component={(props) => <Todo {...props} />}
         />
 
         <ProtectedRoute
