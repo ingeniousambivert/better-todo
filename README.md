@@ -18,7 +18,7 @@ This project uses [Express](https://expressjs.com/) (a fast, unopinionated, mini
     git checkout bull-mq
   ```
 
- **Bree** 
+ **Bree** (WIP)
 
 This variant provides job scheduling with [bree](https://jobscheduler.net/#/).
  ```bash
