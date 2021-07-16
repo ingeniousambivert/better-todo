@@ -1,11 +1,12 @@
 {
-  "name": "express-starter",
+  "name": "better-todo",
   "version": "0.0.0",
   "private": true,
   "scripts": {
     "start": "NODE_ENV=production node ./bin/www",
-    "dev": "NODE_ENV=development DEBUG=express-starter:* nodemon --trace-deprecation --trace-warnings ./bin/www",
-    "dev:workers": "NODE_ENV=development DEBUG=express-starter:* nodemon --trace-deprecation --trace-warnings ./workers.js"
+    "workers":  "NODE_ENV=production node ./workers.js",
+    "dev": "NODE_ENV=development DEBUG=better-todo:* nodemon --trace-deprecation --trace-warnings ./bin/www",
+    "dev:workers": "NODE_ENV=development DEBUG=better-todo:* nodemon --trace-deprecation --trace-warnings ./workers.js"
   },
   "dependencies": {
     "bcrypt": "^5.0.1",
