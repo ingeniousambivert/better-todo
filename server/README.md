@@ -12,17 +12,30 @@ cd path/to/server
 npm install
 ```
 
-3.1 Start your server.
+3.1 Start the server.
 
 ```bash
 npm start
 ```
 
-3.2 Start your server in development mode.
+3.2 Start the server in development mode.
 
 ```bash
 npm run dev
 ```
+
+3.3 Start the workers.
+
+```bash
+npm run workers
+```
+
+3.4 Start the workers in development mode. 
+
+```bash
+npm run dev:workers
+```
+
 
 4. Configuring the server with environment variables
 
