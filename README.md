@@ -8,4 +8,4 @@ This project uses [Express](https://expressjs.com/) (a fast, unopinionated, mini
 
 ## Notes
 
-Job scheduling with [bullmq](https://docs.bullmq.io/).
+Job scheduling with [bree](https://jobscheduler.net/).
